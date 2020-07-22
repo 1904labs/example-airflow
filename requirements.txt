@@ -1,0 +1,4 @@
+apache_airflow_backport_providers_google==2020.6.24
+apache-airflow==1.10.11
+psycopg2==2.8.5
+mysqlclient==2.0.1
