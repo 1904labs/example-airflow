@@ -1,5 +1,9 @@
 import unittest
+import sqlite3
 from airflow.models import DagBag
+from airflow.hooks.sqlite_hook import SqliteHook
+from dags.imbd_pull import db_to_file
+import tempfile
 
 class TestImdbPull(unittest.TestCase):
 
@@ -16,6 +20,25 @@ class TestImdbPull(unittest.TestCase):
         sink_tasks = [x for x in tasks if len(x.downstream_list) == 0]
         self.assertEqual(len(sink_tasks), 2)
 
+    def test_db_to_file(self):
+        sqlite_conn = sqlite3.connect(':memory:')
+
+        sqlite_conn.execute('create table person(name text, age integer)')
+        data = [('Alice', 5),('Bob', 24), ('Carol', 33), ('Dave', 15)]
+        sqlite_conn.executemany('insert into person values (?, ?)', data)
+
+        class DBToFileHook(SqliteHook):
+            def get_conn(self):
+                return sqlite_conn
+
+        hook=DBToFileHook()
+        testfile=tempfile.NamedTemporaryFile()
+
+        db_to_file(hook, "select name from person where age > 18", testfile.name)
+
+        lines=testfile.readlines()
+
+        self.assertEqual(len(lines), 3)
 
         
 
