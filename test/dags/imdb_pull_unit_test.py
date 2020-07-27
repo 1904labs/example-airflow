@@ -2,8 +2,10 @@ import unittest
 import sqlite3
 from airflow.models import DagBag
 from airflow.hooks.sqlite_hook import SqliteHook
-from dags.imbd_pull import db_to_file
+from dags.imbd_pull import db_to_file,csv_to_json
 import tempfile
+import csv
+from os import path
 
 class TestImdbPull(unittest.TestCase):
 
@@ -39,6 +41,28 @@ class TestImdbPull(unittest.TestCase):
         lines=testfile.readlines()
 
         self.assertEqual(len(lines), 3)
+
+    def test_csv_to_json(self):
+        testfile=tempfile.NamedTemporaryFile(mode='wt', newline='', suffix='.csv')
+
+        writer = csv.writer(testfile)
+        writer.writerows(
+            [
+                ['name', 'year', 'director_first_name', 'director_last_name'],
+                ['Independence Day', 1996, 'Roland', 'Emmerich'],
+                ['Dodgeball', 2004, 'Rawson', 'Thurber'],
+                ['The Princess Bride', 1987, 'Rob', 'Reiner']
+            ]
+        )
+
+        testfile.flush()
+
+        csv_to_json(testfile.name)
+
+        json_file_name=testfile.name.replace('.csv', '.json')
+        self.assertTrue(path.exists(json_file_name))
+        self.assertGreater(path.getsize(json_file_name), 0)
+        
 
         
 
