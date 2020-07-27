@@ -2,6 +2,7 @@ import unittest
 import sqlite3
 from airflow.models import DagBag
 from airflow.hooks.sqlite_hook import SqliteHook
+
 from .. import dags
 from dags.imbd_pull import db_to_file,csv_to_json
 import tempfile
@@ -63,8 +64,6 @@ class TestImdbPull(unittest.TestCase):
         json_file_name=testfile.name.replace('.csv', '.json')
         self.assertTrue(path.exists(json_file_name))
         self.assertGreater(path.getsize(json_file_name), 0)
-        
-
         
 
 
