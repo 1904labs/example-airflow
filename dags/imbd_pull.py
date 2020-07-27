@@ -105,12 +105,12 @@ def db_to_file(hook, sql, filename):
 def csv_to_json(filename):
     with open(filename, 'r') as infile:
         reader = csv.reader(infile)
-        headers = reader.next()
+        headers = next(reader)
         new_filename = filename.rsplit('.', 1)[0] + '.json'
         with open(new_filename, 'w+') as outfile:
             for row in reader:
                 row_json = {headers[i]: value for i, value in enumerate(row)}
-                outfile.write(row_json)
+                outfile.write(str(row_json))
                 outfile.write("\n")
 
 
