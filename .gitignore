@@ -3,5 +3,6 @@ __pycache__/
 **/__pycache__
 .vscode/
 airflow.cfg
+unittests.cfg
 airflow.db
 logs/
