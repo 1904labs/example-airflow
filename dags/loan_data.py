@@ -16,7 +16,7 @@ with DAG(**dag_params) as dag:
     move_results = PostgresToGoogleCloudStorageOperator(
         task_id="move_results",
         bucket=DESTINATION_BUCKET,
-        filename=DESTINATION_DIRECTORY + "/{{ execution_date }}" + "/DEMO{}.json",
+        filename=DESTINATION_DIRECTORY + "/{{ execution_date }}" + "/{}.json",
         sql='''SELECT *, due_date::date - effective_date::date as calc FROM loan_data;''',
         retries=3,
         postgres_conn_id="postgres_poc"
