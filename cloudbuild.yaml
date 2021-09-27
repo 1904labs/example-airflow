@@ -12,3 +12,5 @@ steps:
   args: [ '-c', 'if [ "$BRANCH_NAME" == "develop" ]; then echo "$BRANCH_NAME" && gsutil -m rsync -d -r ./dags gs://${_COMPOSER_BUCKET}/dags; else echo "Working on $BRANCH_NAME"; fi']
 substitutions:
     _COMPOSER_BUCKET: us-central1-my-composer-b5164114-bucket
+options:
+  logging: CLOUD_LOGGING_ONLY
